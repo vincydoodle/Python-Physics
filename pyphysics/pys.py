@@ -3,15 +3,12 @@ import re
 from colorama import Fore
 import json
 
-# Load settings from the JSON file
 with open("pyphysics/settings.json", "r") as f:
     settings = json.load(f)
 SCALE = settings["Visualization"]["SCALE"]
 
 class options:
 
-    # Constants loaded from JSON
-    # Visualization
     WIDTH = settings["Visualization"]["WIDTH"]
     HEIGHT = settings["Visualization"]["HEIGHT"]
     WINDOW_NAME = settings["Visualization"]["WINDOW_NAME"]
@@ -21,18 +18,15 @@ class options:
     PATH_THICKNESS = settings["Visualization"]["PATH_THICKNESS"]
     PATH_COLOR = tuple(settings["Visualization"]["PATH_COLOR"])
 
-    # Physics
     G_CONST = settings["Physics"]["G_CONST"]
     SOFTENING = settings["Physics"]["SOFTENING"]
     MAX_SIM_UPDATE_SPEED = settings["Physics"]["MAX_SIM_UPDATE_SPEED"]
     BODY_1_MASS = settings["Physics"]["BODY_1_MASS"]
     BODY_2_MASS = settings["Physics"]["BODY_2_MASS"]
 
-    # Color Scheme
     BACKGROUND_COLOR = tuple(settings["Color_Scheme"]["BACKGROUND_COLOR"])
     BODY_COLORS = [tuple(color) for color in settings["Color_Scheme"]["BODY_COLORS"]]
 
-    # Performance
     STEPS_PER_FRAME = settings["Performance"]["STEPS_PER_FRAME"]
     MAX_ALLOWED_FPS = settings["Performance"]["MAX_ALLOWED_FPS"]
     DELTA_TIME = settings["Performance"]["DELTA_TIME"]
@@ -100,7 +94,6 @@ participants = [
 ]
 
 def extract_number(text):
-    # Regular expression to match a number, including negatives
     match = re.search(r'-?\d+', text)
     if match:
         return int(match.group())
