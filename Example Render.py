@@ -2,7 +2,6 @@ import pygame
 from pyphysics import pys
 
 pygame.init()
-
 logo = pygame.image.load('logo.png')
 screen = pygame.display.set_mode((pys.options.WIDTH, pys.options.HEIGHT), pygame.RESIZABLE, pygame.NOFRAME)
 pygame.display.set_caption(pys.options.WINDOW_NAME, pys.options.WINDOW_NAME)
