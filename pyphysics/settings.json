@@ -1,0 +1,31 @@
+
+{
+  "Visualization": {
+    "WIDTH": 800,
+    "HEIGHT": 800,
+    "WINDOW_NAME": "Two-Body Orbit Simulation",
+    "SCALE": 5,
+    "SCREEN_TEARING": false,
+    "BODY_RADIUS": 3,
+    "SHOW_PATHS": true,
+    "PATH_THICKNESS": 1,
+    "PATH_COLOR": [20, 20, 20]
+  },
+  "Physics": {
+    "G_CONST": 2,
+    "SOFTENING": 0.01,
+    "MAX_SIM_UPDATE_SPEED": "60fps",
+    "BODY_1_MASS": 100,
+    "BODY_2_MASS": 100
+  },
+  "Color_Scheme": {
+    "BACKGROUND_COLOR": [0, 0, 0],
+    "BODY_COLORS": [[255, 0, 0], [0, 255, 0]]
+  },
+  "Performance": {
+    "STEPS_PER_FRAME": 5,
+    "MAX_ALLOWED_FPS": 1000,
+    "DELTA_TIME": 0.1
+  }
+}
+
