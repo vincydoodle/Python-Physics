@@ -1,57 +1,56 @@
 import pygame
-from pyphysics import pys
+import pyphysics
 
 pygame.init()
 logo = pygame.image.load('logo.png')
-screen = pygame.display.set_mode((pys.options.WIDTH, pys.options.HEIGHT), pygame.RESIZABLE, pygame.NOFRAME)
-pygame.display.set_caption(pys.options.WINDOW_NAME, pys.options.WINDOW_NAME)
+screen = pygame.display.set_mode((800, 800), pygame.RESIZABLE, pygame.NOFRAME)
+pygame.display.set_caption("Two-Body Orbit Simulation")
 pygame.display.set_icon(logo)
-pygame.display.update()
 
-OFFSET_X = pys.options.WIDTH // 2
-OFFSET_Y = pys.options.HEIGHT // 2
-
-clock = pygame.time.Clock()
+OFFSET_X = 800 // 2
+OFFSET_Y = 800 // 2
+scale = 0.1
 
 def to_screen_coords(pos):
-    return int(pos.x * pys.SCALE + OFFSET_X), int(-pos.y * pys.SCALE + OFFSET_Y)
+    return int(pos.x * scale + OFFSET_X), int(-pos.y * scale + OFFSET_Y)
 
 running = True
-STEPS_PER_FRAME = 5
-previous_time = pygame.time.get_ticks()
+clock = pygame.time.Clock()
+
+universe = pyphysics.physics.Environment(2000)
+
+universe.add_body(pyphysics.physics.Body(100, pyphysics.Vector2(100, 0), pyphysics.Vector2(0, 20)))
+universe.add_body(pyphysics.physics.Body(100, pyphysics.Vector2(-100, 0), pyphysics.Vector2(0, -20)))
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    current_time = pygame.time.get_ticks()
-    delta_time = (current_time - previous_time) / 1000.0
-    previous_time = current_time
+    delta_time = clock.tick(pyphysics.forced_speed) / 1000.0
 
-    sim_speed_factor = 1 if pys.options.SCREEN_TEARING else delta_time * pys.max_speed
+    # Update simulation
+    for _ in range(pyphysics.STEPS_PER_FRAME):
+        universe.update(delta_time)
 
-    for _ in range(STEPS_PER_FRAME):
-        for p in pys.participants:
-            p.update(pys.participants, 0.1 * sim_speed_factor)
+    # Clear screen
+    screen.fill((0, 0, 0))
 
-    screen.fill(pys.options.BACKGROUND_COLOR)
-
-    for i, p in enumerate(pys.participants):
+    # Draw paths
+    for p in universe.participants:
         if len(p.path) > 1:
-            for j in range(1, len(p.path)):
-                start = to_screen_coords(p.path[j - 1])
-                end = to_screen_coords(p.path[j])
-                trail_thickness = max(1, int(pys.options.PATH_THICKNESS * pys.SCALE))
-                pygame.draw.line(screen, pys.options.PATH_COLOR, start, end, trail_thickness)
+            for i in range(1, len(p.path)):
+                start = to_screen_coords(p.path[i - 1])
+                end = to_screen_coords(p.path[i])
+                pygame.draw.line(screen, (20, 20, 20), start, end, max(1, int(2 * scale)))
 
-    for i, p in enumerate(pys.participants):
+    # Draw bodies
+    for p in universe.participants:
         current_pos = to_screen_coords(p.position)
-        body_size = max(1, int(pys.options.BODY_RADIUS * pys.SCALE))
-        pygame.draw.circle(screen, pys.options.BODY_COLORS[i], current_pos, body_size)
-    pygame.display.flip()
+        body_size = max(1, (0.05 * p.mass) * scale)
+        color = p.color
+        pygame.draw.circle(screen, color, current_pos, int(body_size))
 
-    if not pys.options.SCREEN_TEARING:
-        clock.tick(pys.max_speed)
+    pygame.display.flip()
 
 pygame.quit()
